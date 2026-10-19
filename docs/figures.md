@@ -8,7 +8,7 @@ python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing
 python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing --column wins_vs_pythag
 python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing --cond 'rd,>,0' --cond 'rank_ra,<=,2'
 python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing --embed
-python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing --png --svg
+python -m dragowing --results cycles/c001-chunichi/outputs --out build/dragowing --png --svg --json
 ```
 
 `--cond` の値は JSON である（`0`、`true`、`"d"`）。省略すると、`propositions.jsonl` の `if` をファイルの順に見て、`season.jsonl` にある列の原子を 2 個取り、そこに B クラス（`upper_half == false`）を足す。集合は 2 個か 3 個である。

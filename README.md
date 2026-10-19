@@ -29,7 +29,7 @@ uv sync
 ```
 
 ```bash
-python -m dragowing --results <DIR> --out build/dragowing [--id ID ...] [--column 列] [--cond col,op,値] [--png] [--svg] [--embed]
+python -m dragowing --results <DIR> --out build/dragowing [--id ID ...] [--column 列] [--cond col,op,値] [--png] [--svg] [--json] [--embed]
 ```
 
 - `--results` は `season.jsonl` と `propositions.jsonl` があるディレクトリ。`--id` で命題を絞り、`--column` で球団×年に置く数値列（既定 `wins_vs_pythag`）を選ぶ。
