@@ -1,0 +1,23 @@
+name: Browser diagnostic perf admission
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/check_perf_admission.py
+      - tests/test_perf_admission.py
+      - .github/workflows/perf-admission.yml
+
+permissions:
+  contents: read
+
+jobs:
+  admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify diagnostic contract with mocks
+        run: python3 -m unittest discover -s tests -p test_perf_admission.py -v
+      - name: Check one same-UID synthetic child (no browser)
+        run: python3 scripts/check_perf_admission.py
