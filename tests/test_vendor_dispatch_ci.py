@@ -34,7 +34,7 @@ def test_vendor_dispatch_verifies_the_lock_without_record():
     assert 'uv run --locked --python "${{ matrix.python }}" pytest' in text
     job = _job(text, "vendor-dispatch")
     assert "needs: changes" in job
-    assert "actions/checkout@v7" in job
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1" in job
     assert SETUP_NODE in job
     assert SETUP_PYTHON in job
     assert SETUP_UV in job
