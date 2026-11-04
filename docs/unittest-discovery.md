@@ -2,7 +2,7 @@
 
 Run from this repository root with Python 3.11 or newer. These commands use
 Python’s built-in test runner; no pip, uv sync, pytest or browser installation
-is needed for the listed checks. `-S` keeps site-packages out of the interpreter.
+is needed for the listed checks. `-S` disables automatic `site` initialization.
 
 These focused tests also need a POSIX environment with `bash` on `PATH`
 (for example, Linux or WSL). They invoke `bash` and check Unix file permissions;
