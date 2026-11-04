@@ -4,6 +4,10 @@ Run from this repository root with Python 3.11 or newer. These commands use
 Python’s built-in test runner; no pip, uv sync, pytest or browser installation
 is needed for the listed checks. `-S` keeps site-packages out of the interpreter.
 
+These focused tests also need a POSIX environment with `bash` on `PATH`
+(for example, Linux or WSL). They invoke `bash` and check Unix file permissions;
+a native Windows Python installation alone is not sufficient.
+
 ```sh
 python -S -m unittest discover -s tests -p test_dragowing_managed_chromium.py -v
 ```
