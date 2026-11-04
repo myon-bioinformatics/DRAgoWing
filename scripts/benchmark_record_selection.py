@@ -29,7 +29,8 @@ def main():
                 start=time.perf_counter_ns()
                 got=functions[name](rows,{},ids)
                 elapsed=time.perf_counter_ns()-start
-                assert got==expected
+                if got != expected:
+                    raise SystemExit("selection mismatch")
                 if repeat:
                     samples[name].append(elapsed)
         peaks={}
