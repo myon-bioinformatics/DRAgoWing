@@ -103,22 +103,22 @@ Markdown for HTML, Chromium for image export, and so on are still needed.
 
 ## Layout
 
-| File | Contents |
-|---|---|
-| `cli.py`, `__main__.py` | `python -m dragowing RESULTS [--out DIR]` |
-| `records.py` | Reads the results directory's JSONL in record order |
-| `figures.py` | Plotly figure JSON (data / layout) of recorded values |
-| `htmlout.py` | HTML. Text and tables are built from Markdown (Plotly for trajectories, team × year, and condition overlap) |
-| `venn.py` | Condition-overlap grids for 2–8 sets in Gray-code order, and per-region stacked breakdown bars; returns Plotly JSON (`venn_figures`) |
-| `forms.py` | 2×2 of the four forms and logic notation for conditions ([docs/forms.md](docs/forms.md)) |
-| `overlap.py` | Overlap of condition sets and the B class (masks are rule_search bit matrices) |
-| `plotly_cdn.py` | Plotly.js (jsDelivr) |
-| `chrome_pipe.py`, `render.py`, `export.py` | Optional PNG / SVG export with headless Chromium ([docs/export.md](docs/export.md)) |
-| `dragowing.py` | The single file (stdlib only): counts HTML elements without a browser (`python dragowing.py PAGE`, `count_elements()`) |
-| `research_report.py`, `reports/` | Research summary figures and Markdown report rendering (called from Aoi's workflow) |
-| `docs/` | `forms.md`, `figures.md`, `export.md` |
-| `vendor/aoi/`, `vendor.lock.json` | The Aoi shared tools this repository uses: `fetch_module.py` and `numpy_min.py` |
-| `tests/` | pytest |
+| File | Contents | ➡️ Planned place |
+|---|---|---|
+| `dragowing.py` | The single file (stdlib only): counts HTML elements without a browser (`python dragowing.py PAGE`, `count_elements()`) | stays at the top, and takes in the generic stdlib parts below |
+| `plotly_cdn.py` | Plotly.js (jsDelivr) | into `dragowing.py` |
+| `chrome_pipe.py`, `render.py`, `export.py` | Optional PNG / SVG export with headless Chromium ([docs/export.md](docs/export.md)) | into `dragowing.py` |
+| `records.py` | Reads the results directory's JSONL in record order | into `dragowing.py` |
+| `venn.py`, `_overlap_stdlib.py` | Condition-overlap grids for 2–8 sets in Gray-code order and per-region stacked bars (`venn_figures`); the stdlib row evaluation behind `load_overlap(..., backend="stdlib")` | `core/` |
+| `cli.py`, `__main__.py` | `python -m dragowing RESULTS [--out DIR]` | `cli.py` → `npb/`; `__main__.py` stays (package entry) |
+| `figures.py` | Plotly figure JSON (data / layout) of recorded values (trajectories, team × year) | `npb/` |
+| `htmlout.py` | HTML. Text and tables are built from Markdown (Plotly for trajectories, team × year, and condition overlap) | `npb/` |
+| `forms.py` | 2×2 of the four forms and logic notation for conditions ([docs/forms.md](docs/forms.md)); uses QueRyu's `ask` | `npb/` |
+| `overlap.py` | Overlap of condition sets and the B class (masks are rule_search bit matrices); uses PythDRagoras | `npb/` |
+| `research_report.py`, `reports/` | Research summary figures and Markdown report rendering (called from Aoi's workflow) | `npb/` |
+| `docs/`, `vendor/aoi/`, `vendor.lock.json`, `tests/` | Docs; the Aoi shared tools (`fetch_module.py`, `numpy_min.py`); pytest | as is |
+
+➡️ The moves happen when DRAgoWing is next synced into Aoi, together with Aoi's side. Aoi names these modules by package path in more than 60 places (`dragowing.overlap`, `dragowing.research_report`, `dragowing.export`, `dragowing.records`, `dragowing.plotly_cdn`, `from dragowing import chrome_pipe, render` in workflows, scripts, tests, `distributions/entries/dragowing_api.py` and provenance records), so moving them here first would break Aoi's CI. Relative imports inside the package (`from .forms import …`) change with them.
 
 ## Tests
 
