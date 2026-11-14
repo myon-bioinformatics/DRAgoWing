@@ -114,7 +114,7 @@ Markdown for HTML, Chromium for image export, and so on are still needed.
 | `overlap.py` | Overlap of condition sets and the B class (masks are rule_search bit matrices) |
 | `plotly_cdn.py` | Plotly.js (jsDelivr) |
 | `chrome_pipe.py`, `render.py`, `export.py` | Optional PNG / SVG export with headless Chromium ([docs/export.md](docs/export.md)) |
-| `html_tag_count.py` | Counts HTML elements without a browser |
+| `dragowing.py` | The single file (stdlib only): counts HTML elements without a browser (`python dragowing.py PAGE`, `count_elements()`) |
 | `research_report.py`, `reports/` | Research summary figures and Markdown report rendering (called from Aoi's workflow) |
 | `docs/` | `forms.md`, `figures.md`, `export.md` |
 | `vendor/aoi/`, `vendor.lock.json` | The Aoi shared tools this repository uses: `fetch_module.py` and `numpy_min.py` |
