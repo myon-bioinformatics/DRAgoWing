@@ -164,3 +164,13 @@ def test_four_forms_are_a_markdown_table_with_a_separator():
     tables = text.split("\n\n")
     assert len(tables) == 3
     assert tables[-1].splitlines()[1] == "|---|---|"
+
+
+def test_registration_labels_match_queryu():
+    # Compare the standalone presentation contract with the authoritative producer.
+    from ask import registration_status as queryu_status
+    from dragowing.dragowing import registration_status
+    for item in ({}, {"posthoc": False}, {"posthoc": True, "preregistered": True},
+                 {"preregistered": True}, {"preregistered_at": "2026-01-01"},
+                 {"preregistration": "ref"}, {"posthoc": 1}, {"preregistered": 1}):
+        assert registration_status(item) == queryu_status(item)
