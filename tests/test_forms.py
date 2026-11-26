@@ -125,13 +125,19 @@ def test_real_proposition_table_agrees_with_its_forms():
     assert registration_status(row) in LABELS
 
 
-def test_missing_sibling_names_aoi_py(monkeypatch):
-    # 兄弟の場所は呼び出し側（Aoi の aoi.py）が入れる。DRAgoWing は探さず、aoi.py を案内して止まる
+def test_forms_do_not_require_ask(monkeypatch):
     import dragowing.dragowing as forms
     monkeypatch.setitem(sys.modules, "ask", None)
+    assert forms.registration_status({}) == "不明"
+    assert forms.registration_status({"posthoc": True}) == "事後構成"
+
+
+def test_missing_native_sibling_names_aoi_py(monkeypatch):
+    import dragowing.dragowing as forms
+    monkeypatch.setitem(sys.modules, "rule_search", None)
     with pytest.raises(ModuleNotFoundError, match=r"aoi\.py") as caught:
-        forms.registration_status({})
-    assert caught.value.name == "ask"
+        forms._sibling("rule_search", "PythDRagoras")
+    assert caught.value.name == "rule_search"
 
 
 # ==== 表示と既存の評価器の照合（旧 test_forms_review.py）: compare the display against the existing evaluator, without changing its decisions
