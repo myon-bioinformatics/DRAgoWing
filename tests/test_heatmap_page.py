@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 _cli_spec = importlib.util.spec_from_file_location("dragowing_cli_args", ROOT / "vendor/cli_args/cli_args.py")
@@ -15,7 +17,8 @@ _cli_spec.loader.exec_module(_cli_args)
 run_cli = _cli_args.run_cli
 
 
-def _page() -> str:
+@pytest.fixture(scope="module")
+def page_html() -> str:
     page = run_cli(ROOT / "scripts/build_heatmap_page.py", cwd=ROOT)
     assert page.returncode == 0, page.stderr
     return page.stdout
@@ -26,8 +29,8 @@ def _pswb():
     return importlib.import_module("pysaiyanweboo")
 
 
-def test_page_uses_pswb_parts():
-    html = _page()
+def test_page_uses_pswb_parts(page_html):
+    html = page_html
     assert html.startswith("<!doctype html>")
     assert '<body class="ui-elements" data-ui-theme="modern">' in html and '<main class="ui-page">' in html
     assert "data-ui-theme-switch" in html and 'data-ui-scroll="table"' in html
@@ -43,8 +46,8 @@ def test_page_uses_pswb_parts():
     assert "https://myon-bioinformatics.github.io/tools/#image-studio" in html and "/tools/ironmate/" not in html
 
 
-def test_every_draft_field_has_a_records_key():
-    html = _page()
+def test_every_draft_field_has_a_records_key(page_html):
+    html = page_html
     keys = re.findall(r'data-ui-draft="([^"]+)"', html[:html.index('<script type="module">')])   # the markup, not the modules
     assert sorted(keys) == sorted({"source", "format", "palette", "steps", "zmin", "zmax", "labels", "reverse", "transpose",
                                    "flip-y", "export-axes", "size"})
@@ -59,7 +62,7 @@ def test_pswb_is_pinned_by_commit_and_not_vendored():
     assert not (ROOT / "vendor/pysaiyanweboo").exists()
 
 
-def test_built_page_accepts_portfolio_back_nav():
+def test_built_page_accepts_portfolio_back_nav(page_html):
     ui = _pswb()
-    with_nav = ui.add_back_nav(_page(), [{"label": "← 🧰 Tools", "href": "../../index.html#tools"}], test_id="portfolio-back")
+    with_nav = ui.add_back_nav(page_html, [{"label": "← 🧰 Tools", "href": "../../index.html#tools"}], test_id="portfolio-back")
     assert '<main class="ui-page"><nav class="ui-back"' in with_nav and 'data-testid="portfolio-back"' in with_nav

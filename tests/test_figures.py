@@ -504,30 +504,31 @@ def test_every_proposition_table_matches_the_file():
     assert shown(original["hold"]) in first
     assert shown(original["n"] - original["hold"]) in first
     assert shown(original["rate"]) in first
-    for item in items:
-        assert f'id="{item["id"]}"' in page
-        assert f'href="#{item["id"]}"' in page
-        assert registration_status(item) in page
+    sections = page.split('<h2 id="')[1:]
+    for item, section in zip(items, sections, strict=True):
+        assert section.startswith(f'{item["id"]}">')
+        assert f'href="#{item["id"]}"' in first
+        assert registration_status(item) in section
         if isinstance(item.get("statement"), str):
-            assert shown(item["statement"]) in page
+            assert shown(item["statement"]) in section
         for key in ("P∧Q", "P∧¬Q", "¬P∧Q", "¬P∧¬Q"):
-            assert shown(format_contingency_cell(item, key)) in page
+            assert shown(format_contingency_cell(item, key)) in section
         for form in item["forms"]:
-            assert _form_cell(form) in page
+            assert _form_cell(form) in section
             if "rate" in form:
-                assert "rate=" + json.dumps(form["rate"], ensure_ascii=False) in page
+                assert "rate=" + json.dumps(form["rate"], ensure_ascii=False) in section
             for card in form.get("counterexamples") or []:
                 if not isinstance(card, dict):
                     continue
-                assert shown(card["unit"]) in page
-                assert shown(card["question"]) in page
-                assert shown(card["values"]) in page
-                assert shown(card["context"]) in page
+                assert shown(card["unit"]) in section
+                assert shown(card["question"]) in section
+                assert shown(card["values"]) in section
+                assert shown(card["context"]) in section
                 if "surprise" in card:
-                    assert shown(card["surprise"]) in page
+                    assert shown(card["surprise"]) in section
         for card in item.get("excluded_counterexamples") or []:
             if isinstance(card, dict):
-                assert shown(card["unit"]) in page
+                assert shown(card["unit"]) in section
 
 
 def test_sources_do_not_import_banned_plot_libraries():
