@@ -3,7 +3,6 @@
 # vendor-dispatch は親 main の pilot/vendor_dispatch.py で vendor.lock.json を検証する。--record は付けない。
 name: CI
 on:
-  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
@@ -21,10 +20,8 @@ jobs:
     uses: myon-bioinformatics/myon-bioinformatics/.github/workflows/reusable-change-detection.yml@main
 
   resolve-vendor:
+    # vendor-lock also uses Aoi on docs-only PRs, so resolve it alongside change detection.
     name: Resolve Aoi
-    needs: changes
-    # vendor-lock は docs-only の PR でも Aoi の最新 main と照合する。product_changed では落とさない。
-    if: always() && needs.changes.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -99,8 +96,7 @@ jobs:
 
   vendor-lock:
     name: Vendor lock
-    needs: resolve-vendor
-    if: always() && needs.resolve-vendor.result == 'success'
+    needs: [changes, resolve-vendor]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -325,7 +321,7 @@ jobs:
 
   # 🔁 own sources follow main: on schedule / manual run, take main of own repositories and push to main
   follow-main:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule'
     uses: myon-bioinformatics/myon-bioinformatics/.github/workflows/reusable-follow-main.yml@main
     permissions:
       contents: write
